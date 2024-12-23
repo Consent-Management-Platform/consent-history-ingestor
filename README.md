@@ -1,5 +1,5 @@
-# consent-history-processor
-This package defines service code for the Consent History Processor, which syncs consent updates to a consent history data store.
+# consent-history-ingestor
+This package defines service code for the Consent History Ingestor, which syncs consent updates to a consent history data store.
 
 ## License
 The code in this project is released under the [GPL-3.0 License](LICENSE).

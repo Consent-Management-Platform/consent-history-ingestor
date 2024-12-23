@@ -1,14 +1,14 @@
-package com.consentframework.consenthistory.consentstreamprocessor;
+package com.consentframework.consenthistory.consentingestor;
 
 import java.util.Map;
 
 /**
- * Entry point for the service, used to process consent updates
+ * Entry point for the service, used to ingest consent updates
  * from a data stream and sync changes to the consent history data store.
  */
-public class ConsentStreamProcessor {
+public class ConsentStreamIngestor {
     /**
-     * Handle an incoming request to process consent updates.
+     * Handle an incoming request to ingest consent updates.
      *
      * @return A map of response data.
      */

@@ -31,7 +31,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "com.consentframework.consenthistory.consentstreamprocessor.ConsentStreamProcessor"
+    mainClass = "com.consentframework.consenthistory.consentingestor.ConsentStreamIngestor"
 }
 
 tasks {
