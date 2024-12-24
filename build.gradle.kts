@@ -73,3 +73,15 @@ tasks {
         dependsOn(jacocoTestCoverageVerification)
     }
 }
+
+// Build jar which will later be consumed to run the application
+tasks.register<Zip>("packageJar") {
+    into("lib") {
+        from(tasks.jar)
+        from(configurations.runtimeClasspath)
+    }
+}
+
+tasks.build {
+    dependsOn("packageJar")
+}
