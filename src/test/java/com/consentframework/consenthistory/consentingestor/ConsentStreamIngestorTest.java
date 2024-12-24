@@ -21,6 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +78,7 @@ class ConsentStreamIngestorTest {
         );
         final StreamRecord streamRecord = new StreamRecord()
             .withKeys(keys)
+            .withApproximateCreationDateTime(Date.from(Instant.now()))
             .withOldImage(oldImage)
             .withNewImage(newImage)
             .withStreamViewType(StreamViewType.NEW_AND_OLD_IMAGES);
@@ -97,6 +100,7 @@ class ConsentStreamIngestorTest {
         );
         final StreamRecord streamRecord = new StreamRecord()
             .withKeys(keys)
+            .withApproximateCreationDateTime(Date.from(Instant.now()))
             .withNewImage(newImage)
             .withStreamViewType(StreamViewType.NEW_AND_OLD_IMAGES);
 

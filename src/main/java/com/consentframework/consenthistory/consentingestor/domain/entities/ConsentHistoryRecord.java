@@ -13,6 +13,8 @@ public record ConsentHistoryRecord<T>(
     String id,
     // Unique consent event ID
     String eventId,
+    // Time of the consent event
+    String eventTime,
     // Optional time to live for the history record, primarily for testing purposes
     Optional<String> expiryTime,
     // Consent data before the operation, empty for creation events

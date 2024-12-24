@@ -31,3 +31,6 @@ build
 
 # Ignore local IDE specific files
 .vscode/
+
+# Ignore generated source files
+bin/

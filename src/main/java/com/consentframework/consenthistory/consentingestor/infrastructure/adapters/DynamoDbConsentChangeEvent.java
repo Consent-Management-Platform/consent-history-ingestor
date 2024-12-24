@@ -13,16 +13,18 @@ import java.util.Optional;
 public class DynamoDbConsentChangeEvent implements ConsentChangeEvent<Map<String, AttributeValue>> {
     private final String sourceConsentId;
     private final String eventId;
+    private final String eventTime;
     private final Map<String, AttributeValue> oldConsentData;
     private final Map<String, AttributeValue> newConsentData;
 
     /**
      * Create a new DynamoDB consent change event.
      */
-    public DynamoDbConsentChangeEvent(final String sourceConsentId, final String eventId,
+    public DynamoDbConsentChangeEvent(final String sourceConsentId, final String eventId, final String eventTime,
             final Map<String, AttributeValue> oldConsentData, final Map<String, AttributeValue> newConsentData) {
         this.sourceConsentId = sourceConsentId;
         this.eventId = eventId;
+        this.eventTime = eventTime;
         this.oldConsentData = oldConsentData;
         this.newConsentData = newConsentData;
     }
@@ -35,6 +37,7 @@ public class DynamoDbConsentChangeEvent implements ConsentChangeEvent<Map<String
         return new ConsentHistoryRecord<Map<String, AttributeValue>>(
             sourceConsentId,
             eventId,
+            eventTime,
             null,
             Optional.ofNullable(oldConsentData),
             Optional.ofNullable(newConsentData)

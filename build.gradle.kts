@@ -17,9 +17,14 @@ checkstyle {
 dependencies {
     implementation(libs.guava)
 
-    // AWS SDK dependencies
+    // AWS Lambda SDK
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
     implementation("com.amazonaws:aws-lambda-java-events:3.14.0")
+
+    // AWS DynamoDB SDK
+    val dynamoDbClientVersion = "2.26.7"
+    implementation("software.amazon.awssdk:dynamodb:$dynamoDbClientVersion")
+    implementation("software.amazon.awssdk:dynamodb-enhanced:$dynamoDbClientVersion")
 
     // JSON parsing dependencies
     // Chose Jackson over GSON for better performance and long term support.
@@ -29,9 +34,15 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // Immutables
+    val immutablesDependency = "org.immutables:value:2.10.1"
+    compileOnly(immutablesDependency)
+    annotationProcessor(immutablesDependency)
+    testCompileOnly(immutablesDependency)
+    testAnnotationProcessor(immutablesDependency)
 
     // Use JUnit Jupiter for testing.
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation(libs.junit.jupiter)
 
     testImplementation("org.mockito:mockito-core:5.12.0")

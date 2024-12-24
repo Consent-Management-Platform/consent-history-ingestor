@@ -29,6 +29,7 @@ class InMemoryConsentHistoryRepositoryTest {
         final ConsentHistoryRecord<String> consentHistoryRecord = new ConsentHistoryRecord<String>(
             null,
             TestConstants.TEST_CONSENT_EVENT_ID,
+            TestConstants.TEST_CONSENT_EVENT_TIME,
             null,
             null,
             null
@@ -46,6 +47,7 @@ class InMemoryConsentHistoryRepositoryTest {
             null,
             null,
             null,
+            null,
             null
         );
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -59,6 +61,7 @@ class InMemoryConsentHistoryRepositoryTest {
         final ConsentHistoryRecord<String> consentHistoryRecord = new ConsentHistoryRecord<String>(
             TestConstants.TEST_CONSENT_PARTITION_KEY,
             TestConstants.TEST_CONSENT_EVENT_ID,
+            TestConstants.TEST_CONSENT_EVENT_TIME,
             null,
             null,
             null

@@ -5,8 +5,12 @@ package com.consentframework.consenthistory.consentingestor.domain.constants;
  */
 public enum ConsentTableAttributeName {
     ID("id"),
+    SERVICE_ID("serviceId"),
+    USER_ID("userId"),
+    CONSENT_ID("consentId"),
+    CONSENT_DATA("consentData"),
     CONSENT_VERSION("consentVersion"),
-    CONSENT_DATA("consentData");
+    CONSENT_STATUS("consentStatus");
 
     private final String value;
 

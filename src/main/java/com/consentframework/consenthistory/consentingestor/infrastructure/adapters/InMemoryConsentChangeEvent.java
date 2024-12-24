@@ -11,6 +11,7 @@ import java.util.Optional;
 public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
     private final String sourceConsentId;
     private final String eventId;
+    private final String eventTime;
     private final String oldConsentData;
     private final String newConsentData;
 
@@ -19,13 +20,15 @@ public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
      *
      * @param sourceConsentId Unique identifier of the source consent
      * @param eventId Unique identifier of the consent change event
+     * @param eventTime Time of the consent change event
      * @param oldConsentData Consent data prior to the source event
      * @param newConsentData Consent data after the source event
      */
-    public InMemoryConsentChangeEvent(final String sourceConsentId, final String eventId,
+    public InMemoryConsentChangeEvent(final String sourceConsentId, final String eventId, final String eventTime,
             final String oldConsentData, final String newConsentData) {
         this.sourceConsentId = sourceConsentId;
         this.eventId = eventId;
+        this.eventTime = eventTime;
         this.oldConsentData = oldConsentData;
         this.newConsentData = newConsentData;
     }
@@ -38,6 +41,7 @@ public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
         return new ConsentHistoryRecord<String>(
             sourceConsentId,
             eventId,
+            eventTime,
             null,
             Optional.ofNullable(oldConsentData),
             Optional.ofNullable(newConsentData)

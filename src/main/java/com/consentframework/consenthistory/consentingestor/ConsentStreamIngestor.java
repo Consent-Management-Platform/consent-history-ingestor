@@ -56,11 +56,12 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
     private ConsentHistoryRecord<Map<String, AttributeValue>> parseDynamoDbStreamRecord(final DynamodbStreamRecord record) {
         final String eventId = record.getEventID();
         final StreamRecord streamRecord = record.getDynamodb();
+        final String eventTime = streamRecord.getApproximateCreationDateTime().toString();
         final String consentRecordPartitionKey = streamRecord.getKeys().get("id").getS();
         final Map<String, AttributeValue> oldImage = streamRecord.getOldImage();
         final Map<String, AttributeValue> newImage = streamRecord.getNewImage();
 
-        final DynamoDbConsentChangeEvent consentChangeEvent = new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId,
+        final DynamoDbConsentChangeEvent consentChangeEvent = new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId, eventTime,
             oldImage, newImage);
         return consentChangeEvent.toConsentHistoryRecord();
     }

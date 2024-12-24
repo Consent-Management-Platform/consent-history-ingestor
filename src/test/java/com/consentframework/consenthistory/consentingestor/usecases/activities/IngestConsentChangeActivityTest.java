@@ -39,6 +39,7 @@ class IngestConsentChangeActivityTest {
         final ConsentChangeEvent<String> consentChangeEvent = new InMemoryConsentChangeEvent(
             TestConstants.TEST_CONSENT_PARTITION_KEY,
             TestConstants.TEST_CONSENT_EVENT_ID,
+            TestConstants.TEST_CONSENT_EVENT_TIME,
             oldConsentData,
             newConsentData
         );
@@ -58,6 +59,7 @@ class IngestConsentChangeActivityTest {
         final ConsentChangeEvent<String> consentChangeEvent = new InMemoryConsentChangeEvent(
             TestConstants.TEST_CONSENT_PARTITION_KEY,
             TestConstants.TEST_CONSENT_EVENT_ID,
+            TestConstants.TEST_CONSENT_EVENT_TIME,
             null,
             newConsentData
         );
