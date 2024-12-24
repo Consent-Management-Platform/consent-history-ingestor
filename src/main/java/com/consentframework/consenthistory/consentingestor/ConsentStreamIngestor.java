@@ -46,7 +46,14 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
 
     private void processDynamoDbStreamRecord(final DynamodbStreamRecord record) {
         System.out.println("Processing record: " + record);
+        final ConsentHistoryRecord<Map<String, AttributeValue>> consentHistoryRecord = parseDynamoDbStreamRecord(record);
 
+        // TODO: implement logic to write consent history record to the ConsentHistory DynamoDB table
+        System.out.println("TODO: Writing consent history record with source consent ID: " + consentHistoryRecord.id()
+            + ", event ID: " + consentHistoryRecord.eventId());
+    }
+
+    private ConsentHistoryRecord<Map<String, AttributeValue>> parseDynamoDbStreamRecord(final DynamodbStreamRecord record) {
         final String eventId = record.getEventID();
         final StreamRecord streamRecord = record.getDynamodb();
         final String consentRecordPartitionKey = streamRecord.getKeys().get("id").getS();
@@ -55,10 +62,6 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
 
         final DynamoDbConsentChangeEvent consentChangeEvent = new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId,
             oldImage, newImage);
-        final ConsentHistoryRecord<Map<String, AttributeValue>> consentHistoryRecord = consentChangeEvent.toConsentHistoryRecord();
-
-        // TODO: implement logic to write consent history record to the ConsentHistory DynamoDB table
-        System.out.println("TODO: Writing consent history record with source consent ID: " + consentHistoryRecord.id()
-            + ", event ID: " + consentHistoryRecord.eventId());
+        return consentChangeEvent.toConsentHistoryRecord();
     }
 }
