@@ -4,8 +4,12 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+import com.amazonaws.services.lambda.runtime.events.models.dynamodb.AttributeValue;
+import com.amazonaws.services.lambda.runtime.events.models.dynamodb.StreamRecord;
 import com.consentframework.consenthistory.consentingestor.domain.constants.HttpStatusCode;
 import com.consentframework.consenthistory.consentingestor.domain.constants.ResponseParameterName;
+import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
+import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.DynamoDbConsentChangeEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +45,20 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
     }
 
     private void processDynamoDbStreamRecord(final DynamodbStreamRecord record) {
-        // TODO: implement logic to parse the consent change event and sync it to the consent history data store
         System.out.println("Processing record: " + record);
+
+        final String eventId = record.getEventID();
+        final StreamRecord streamRecord = record.getDynamodb();
+        final String consentRecordPartitionKey = streamRecord.getKeys().get("id").getS();
+        final Map<String, AttributeValue> oldImage = streamRecord.getOldImage();
+        final Map<String, AttributeValue> newImage = streamRecord.getNewImage();
+
+        final DynamoDbConsentChangeEvent consentChangeEvent = new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId,
+            oldImage, newImage);
+        final ConsentHistoryRecord<Map<String, AttributeValue>> consentHistoryRecord = consentChangeEvent.toConsentHistoryRecord();
+
+        // TODO: implement logic to write consent history record to the ConsentHistory DynamoDB table
+        System.out.println("TODO: Writing consent history record with source consent ID: " + consentHistoryRecord.id()
+            + ", event ID: " + consentHistoryRecord.eventId());
     }
 }
