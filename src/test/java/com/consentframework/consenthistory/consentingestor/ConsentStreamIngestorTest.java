@@ -16,10 +16,15 @@ import com.amazonaws.services.lambda.runtime.events.models.dynamodb.StreamViewTy
 import com.consentframework.consenthistory.consentingestor.domain.constants.ConsentTableAttributeName;
 import com.consentframework.consenthistory.consentingestor.domain.constants.HttpStatusCode;
 import com.consentframework.consenthistory.consentingestor.domain.constants.ResponseParameterName;
+import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
+import com.consentframework.consenthistory.consentingestor.infrastructure.repositories.DynamoDbConsentHistoryRepository;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
+import com.consentframework.consenthistory.consentingestor.usecases.activities.IngestConsentChangeActivity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
 import java.sql.Date;
 import java.time.Instant;
@@ -27,13 +32,29 @@ import java.util.List;
 import java.util.Map;
 
 class ConsentStreamIngestorTest {
+    private DynamoDbTable<DynamoDbConsentHistory> consentHistoryTable;
+    private DynamoDbConsentHistoryRepository dynamoDbConsentHistoryRepository;
+    private IngestConsentChangeActivity<Map<String, software.amazon.awssdk.services.dynamodb.model.AttributeValue>>
+        ingestConsentChangeActivity;
     private ConsentStreamIngestor ingestor;
     private Context context;
 
+    @SuppressWarnings("unchecked")
     @BeforeEach
     void setUp() {
-        ingestor = new ConsentStreamIngestor();
+        consentHistoryTable = (DynamoDbTable<DynamoDbConsentHistory>) mock(DynamoDbTable.class);;
+        dynamoDbConsentHistoryRepository = new DynamoDbConsentHistoryRepository(consentHistoryTable);
+        ingestConsentChangeActivity = new IngestConsentChangeActivity<Map<String,
+            software.amazon.awssdk.services.dynamodb.model.AttributeValue>>(dynamoDbConsentHistoryRepository);
+        ingestor = new ConsentStreamIngestor(consentHistoryTable, dynamoDbConsentHistoryRepository, ingestConsentChangeActivity);
         context = Mockito.mock(Context.class);
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        final ConsentStreamIngestor ingestor = new ConsentStreamIngestor();
+        assertNotNull(ingestor);
     }
 
     @Test

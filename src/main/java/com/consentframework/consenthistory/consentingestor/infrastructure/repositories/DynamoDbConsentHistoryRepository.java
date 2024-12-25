@@ -38,10 +38,12 @@ public class DynamoDbConsentHistoryRepository implements ConsentHistoryRepositor
             throw new IllegalArgumentException(MISSING_DDB_IMAGES_ERROR_MESSAGE);
         }
         if (consentHistoryRecord.oldConsentData().isPresent()) {
-            ddbHistoryRecordBuilder.oldImage(consentHistoryRecord.oldConsentData().get());
+            final Map<String, AttributeValue> oldImage = consentHistoryRecord.oldConsentData().get();
+            ddbHistoryRecordBuilder.oldImage(oldImage);
         }
         if (consentHistoryRecord.newConsentData().isPresent()) {
-            ddbHistoryRecordBuilder.newImage(consentHistoryRecord.newConsentData().get());
+            final Map<String, AttributeValue> newImage = consentHistoryRecord.newConsentData().get();
+            ddbHistoryRecordBuilder.newImage(newImage);
         }
 
         final PutItemEnhancedRequest<DynamoDbConsentHistory> putItemRequest = PutItemEnhancedRequest.builder(DynamoDbConsentHistory.class)
@@ -52,5 +54,4 @@ public class DynamoDbConsentHistoryRepository implements ConsentHistoryRepositor
         System.out.println("Successfully saved consent history record with source consent ID: " + consentHistoryRecord.id()
             + ", event ID: " + consentHistoryRecord.eventId());
     }
-
 }

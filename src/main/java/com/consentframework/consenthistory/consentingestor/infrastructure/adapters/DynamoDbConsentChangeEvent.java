@@ -1,8 +1,8 @@
 package com.consentframework.consenthistory.consentingestor.infrastructure.adapters;
 
-import com.amazonaws.services.lambda.runtime.events.models.dynamodb.AttributeValue;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentChangeEvent;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.Map;
 import java.util.Optional;
@@ -14,14 +14,14 @@ public class DynamoDbConsentChangeEvent implements ConsentChangeEvent<Map<String
     private final String sourceConsentId;
     private final String eventId;
     private final String eventTime;
-    private final Map<String, AttributeValue> oldConsentData;
-    private final Map<String, AttributeValue> newConsentData;
+    private final Optional<Map<String, AttributeValue>> oldConsentData;
+    private final Optional<Map<String, AttributeValue>> newConsentData;
 
     /**
      * Create a new DynamoDB consent change event.
      */
     public DynamoDbConsentChangeEvent(final String sourceConsentId, final String eventId, final String eventTime,
-            final Map<String, AttributeValue> oldConsentData, final Map<String, AttributeValue> newConsentData) {
+            final Optional<Map<String, AttributeValue>> oldConsentData, final Optional<Map<String, AttributeValue>> newConsentData) {
         this.sourceConsentId = sourceConsentId;
         this.eventId = eventId;
         this.eventTime = eventTime;
@@ -39,8 +39,8 @@ public class DynamoDbConsentChangeEvent implements ConsentChangeEvent<Map<String
             eventId,
             eventTime,
             null,
-            Optional.ofNullable(oldConsentData),
-            Optional.ofNullable(newConsentData)
+            oldConsentData,
+            newConsentData
         );
     }
 }
