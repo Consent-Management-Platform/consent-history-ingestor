@@ -1,6 +1,7 @@
 package com.consentframework.consenthistory.consentingestor.testcommon.constants;
 
 import com.consentframework.consenthistory.consentingestor.domain.constants.ConsentTableAttributeName;
+import com.consentframework.consenthistory.consentingestor.domain.constants.DynamoDbStreamEventType;
 import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
@@ -33,6 +34,7 @@ public final class TestConstants {
     public static final DynamoDbConsentHistory TEST_CONSENT_HISTORY_INSERT_RECORD = DynamoDbConsentHistory.builder()
         .id(TEST_CONSENT_PARTITION_KEY)
         .eventId(TEST_CONSENT_EVENT_ID)
+        .eventType(DynamoDbStreamEventType.INSERT.getValue())
         .eventTime(TEST_CONSENT_EVENT_TIME)
         .newImage(TEST_CONSENT_RECORD)
         .build();

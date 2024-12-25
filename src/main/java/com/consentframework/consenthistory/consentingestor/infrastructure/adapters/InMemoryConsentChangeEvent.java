@@ -9,6 +9,8 @@ import java.util.Optional;
  * In-memory representation of a consent change event, used for testing.
  */
 public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
+    public static final String INSERT_EVENT_TYPE = "INSERT";
+
     private final String sourceConsentId;
     private final String eventId;
     private final String eventTime;
@@ -41,11 +43,11 @@ public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
         return new ConsentHistoryRecord<String>(
             sourceConsentId,
             eventId,
+            INSERT_EVENT_TYPE,
             eventTime,
             null,
             Optional.ofNullable(oldConsentData),
             Optional.ofNullable(newConsentData)
         );
     }
-
 }

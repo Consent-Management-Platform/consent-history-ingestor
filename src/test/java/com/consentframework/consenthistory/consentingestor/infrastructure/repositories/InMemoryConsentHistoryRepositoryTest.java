@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryKey;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
+import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.InMemoryConsentChangeEvent;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ class InMemoryConsentHistoryRepositoryTest {
         final ConsentHistoryRecord<String> consentHistoryRecord = new ConsentHistoryRecord<String>(
             null,
             TestConstants.TEST_CONSENT_EVENT_ID,
+            InMemoryConsentChangeEvent.INSERT_EVENT_TYPE,
             TestConstants.TEST_CONSENT_EVENT_TIME,
             null,
             null,
@@ -48,6 +50,7 @@ class InMemoryConsentHistoryRepositoryTest {
             null,
             null,
             null,
+            null,
             null
         );
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -61,6 +64,7 @@ class InMemoryConsentHistoryRepositoryTest {
         final ConsentHistoryRecord<String> consentHistoryRecord = new ConsentHistoryRecord<String>(
             TestConstants.TEST_CONSENT_PARTITION_KEY,
             TestConstants.TEST_CONSENT_EVENT_ID,
+            InMemoryConsentChangeEvent.INSERT_EVENT_TYPE,
             TestConstants.TEST_CONSENT_EVENT_TIME,
             null,
             null,

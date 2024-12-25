@@ -23,12 +23,13 @@ public final class DynamoDbConsentChangeEventConverter {
     public static DynamoDbConsentChangeEvent toDynamoDbConsentChangeEvent(final DynamodbStreamRecord record) {
         final String eventId = record.getEventID();
         final StreamRecord streamRecord = record.getDynamodb();
+        final String eventType = record.getEventName();
         final String eventTime = streamRecord.getApproximateCreationDateTime().toInstant().toString();
         final String consentRecordPartitionKey = streamRecord.getKeys().get("id").getS();
         final Map<String, AttributeValue> oldImage = LambdaAttributeValueConverter.toDynamoDbAttributeValueMap(streamRecord.getOldImage());
         final Map<String, AttributeValue> newImage = LambdaAttributeValueConverter.toDynamoDbAttributeValueMap(streamRecord.getNewImage());
 
-        return new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId, eventTime,
+        return new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId, eventType, eventTime,
             Optional.ofNullable(oldImage), Optional.ofNullable(newImage));
     }
 }

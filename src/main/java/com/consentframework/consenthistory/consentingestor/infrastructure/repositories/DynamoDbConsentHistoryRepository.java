@@ -32,6 +32,7 @@ public class DynamoDbConsentHistoryRepository implements ConsentHistoryRepositor
         final DynamoDbConsentHistory.Builder ddbHistoryRecordBuilder = DynamoDbConsentHistory.builder()
             .id(consentHistoryRecord.id())
             .eventId(consentHistoryRecord.eventId())
+            .eventType(consentHistoryRecord.eventType())
             .eventTime(consentHistoryRecord.eventTime());
 
         if (consentHistoryRecord.oldConsentData().isEmpty() && consentHistoryRecord.newConsentData().isEmpty()) {

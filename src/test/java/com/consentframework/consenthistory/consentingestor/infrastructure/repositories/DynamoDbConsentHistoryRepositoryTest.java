@@ -2,11 +2,11 @@ package com.consentframework.consenthistory.consentingestor.infrastructure.repos
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.consentframework.consenthistory.consentingestor.domain.constants.DynamoDbStreamEventType;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
 import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
@@ -44,6 +44,7 @@ class DynamoDbConsentHistoryRepositoryTest {
             new ConsentHistoryRecord<Map<String, AttributeValue>>(
                 TestConstants.TEST_CONSENT_ID,
                 TestConstants.TEST_CONSENT_EVENT_ID,
+                DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
                 null,
                 null,
@@ -58,6 +59,7 @@ class DynamoDbConsentHistoryRepositoryTest {
             new ConsentHistoryRecord<Map<String, AttributeValue>>(
                 TestConstants.TEST_CONSENT_ID,
                 TestConstants.TEST_CONSENT_EVENT_ID,
+                DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
                 Optional.empty(),
                 Optional.empty(),
@@ -75,6 +77,7 @@ class DynamoDbConsentHistoryRepositoryTest {
             new ConsentHistoryRecord<Map<String, AttributeValue>>(
                 TestConstants.TEST_CONSENT_ID,
                 TestConstants.TEST_CONSENT_EVENT_ID,
+                DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
                 Optional.empty(),
                 Optional.of(TestConstants.TEST_CONSENT_RECORD),

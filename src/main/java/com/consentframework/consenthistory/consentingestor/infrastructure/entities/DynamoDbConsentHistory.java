@@ -38,6 +38,8 @@ public interface DynamoDbConsentHistory {
     @DynamoDbSortKey
     String eventId();
 
+    String eventType();
+
     String eventTime();
 
     @Nullable
