@@ -4,13 +4,12 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
-import com.amazonaws.services.lambda.runtime.events.models.dynamodb.StreamRecord;
 import com.consentframework.consenthistory.consentingestor.domain.constants.HttpStatusCode;
 import com.consentframework.consenthistory.consentingestor.domain.constants.ResponseParameterName;
 import com.consentframework.consenthistory.consentingestor.domain.repositories.ConsentHistoryRepository;
 import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.DynamoDbConsentChangeEvent;
 import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
-import com.consentframework.consenthistory.consentingestor.infrastructure.mappers.LambdaAttributeValueConverter;
+import com.consentframework.consenthistory.consentingestor.infrastructure.mappers.DynamoDbConsentChangeEventConverter;
 import com.consentframework.consenthistory.consentingestor.infrastructure.repositories.DynamoDbConsentHistoryRepository;
 import com.consentframework.consenthistory.consentingestor.usecases.activities.IngestConsentChangeActivity;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -21,7 +20,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Entry point for the service, used to ingest consent updates
@@ -89,19 +87,7 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
 
     private void processDynamoDbStreamRecord(final DynamodbStreamRecord record) {
         System.out.println("Processing record: " + record);
-        final DynamoDbConsentChangeEvent consentChangeEvent = parseDynamoDbStreamRecord(record);
+        final DynamoDbConsentChangeEvent consentChangeEvent = DynamoDbConsentChangeEventConverter.toDynamoDbConsentChangeEvent(record);
         this.ingestConsentChangeActivity.processEvent(consentChangeEvent);
-    }
-
-    private DynamoDbConsentChangeEvent parseDynamoDbStreamRecord(final DynamodbStreamRecord record) {
-        final String eventId = record.getEventID();
-        final StreamRecord streamRecord = record.getDynamodb();
-        final String eventTime = streamRecord.getApproximateCreationDateTime().toString();
-        final String consentRecordPartitionKey = streamRecord.getKeys().get("id").getS();
-        final Map<String, AttributeValue> oldImage = LambdaAttributeValueConverter.toDynamoDbAttributeValueMap(streamRecord.getOldImage());
-        final Map<String, AttributeValue> newImage = LambdaAttributeValueConverter.toDynamoDbAttributeValueMap(streamRecord.getNewImage());
-
-        return new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId, eventTime,
-            Optional.ofNullable(oldImage), Optional.ofNullable(newImage));
     }
 }
