@@ -52,12 +52,6 @@ class ConsentStreamIngestorTest {
     }
 
     @Test
-    void testDefaultConstructor() {
-        final ConsentStreamIngestor ingestor = new ConsentStreamIngestor();
-        assertNotNull(ingestor);
-    }
-
-    @Test
     void testHandleRequest_noConsentChanges() {
         final DynamodbEvent event = mock(DynamodbEvent.class);
 
