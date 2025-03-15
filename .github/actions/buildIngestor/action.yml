@@ -9,7 +9,7 @@ inputs:
     required: true
 
 outputs:
-  api-artifacts:
+  consent-history-ingestor-artifacts:
     description: 'Built consent history ingestor artifacts'
     value: 'build/distributions/consent-history-ingestor.zip'
 
