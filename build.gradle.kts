@@ -1,17 +1,14 @@
 plugins {
     java
     application
-    checkstyle
     jacoco
+
+    id("com.consentframework.consentmanagement.checkstyle-config") version "1.1.0"
 }
 
 repositories {
     mavenCentral()
-}
-
-checkstyle {
-    toolVersion = "10.16.0"
-    setIgnoreFailures(false)
+    gradlePluginPortal()
 }
 
 dependencies {
