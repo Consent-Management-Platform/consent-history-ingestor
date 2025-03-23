@@ -31,6 +31,11 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
+    // Logging
+    val log4j2Version = "2.24.3"
+    implementation("org.apache.logging.log4j:log4j-api:$log4j2Version")
+    implementation("org.apache.logging.log4j:log4j-core:$log4j2Version")
+
     // Immutables
     val immutablesDependency = "org.immutables:value:2.10.1"
     compileOnly(immutablesDependency)
