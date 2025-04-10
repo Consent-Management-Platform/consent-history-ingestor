@@ -14,6 +14,7 @@ public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
     private final String sourceConsentId;
     private final String eventId;
     private final String eventTime;
+    private final String serviceUserId;
     private final String oldConsentData;
     private final String newConsentData;
 
@@ -27,10 +28,11 @@ public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
      * @param newConsentData Consent data after the source event
      */
     public InMemoryConsentChangeEvent(final String sourceConsentId, final String eventId, final String eventTime,
-            final String oldConsentData, final String newConsentData) {
+            final String serviceUserId, final String oldConsentData, final String newConsentData) {
         this.sourceConsentId = sourceConsentId;
         this.eventId = eventId;
         this.eventTime = eventTime;
+        this.serviceUserId = serviceUserId;
         this.oldConsentData = oldConsentData;
         this.newConsentData = newConsentData;
     }
@@ -45,6 +47,7 @@ public class InMemoryConsentChangeEvent implements ConsentChangeEvent<String> {
             eventId,
             INSERT_EVENT_TYPE,
             eventTime,
+            serviceUserId,
             null,
             Optional.ofNullable(oldConsentData),
             Optional.ofNullable(newConsentData)

@@ -15,18 +15,26 @@ public class DynamoDbConsentChangeEvent implements ConsentChangeEvent<Map<String
     private final String eventId;
     private final String eventType;
     private final String eventTime;
+    private final String serviceUserId;
     private final Optional<Map<String, AttributeValue>> oldConsentData;
     private final Optional<Map<String, AttributeValue>> newConsentData;
 
     /**
      * Create a new DynamoDB consent change event.
      */
-    public DynamoDbConsentChangeEvent(final String sourceConsentId, final String eventId, final String eventType, final String eventTime,
-            final Optional<Map<String, AttributeValue>> oldConsentData, final Optional<Map<String, AttributeValue>> newConsentData) {
+    public DynamoDbConsentChangeEvent(
+            final String sourceConsentId,
+            final String eventId,
+            final String eventType,
+            final String eventTime,
+            final String serviceUserId,
+            final Optional<Map<String, AttributeValue>> oldConsentData,
+            final Optional<Map<String, AttributeValue>> newConsentData) {
         this.sourceConsentId = sourceConsentId;
         this.eventId = eventId;
         this.eventType = eventType;
         this.eventTime = eventTime;
+        this.serviceUserId = serviceUserId;
         this.oldConsentData = oldConsentData;
         this.newConsentData = newConsentData;
     }
@@ -41,6 +49,7 @@ public class DynamoDbConsentChangeEvent implements ConsentChangeEvent<Map<String
             eventId,
             eventType,
             eventTime,
+            serviceUserId,
             null,
             oldConsentData,
             newConsentData

@@ -32,6 +32,7 @@ class InMemoryConsentHistoryRepositoryTest {
             TestConstants.TEST_CONSENT_EVENT_ID,
             InMemoryConsentChangeEvent.INSERT_EVENT_TYPE,
             TestConstants.TEST_CONSENT_EVENT_TIME,
+            TestConstants.TEST_SERVICE_USER_ID,
             null,
             null,
             null
@@ -49,6 +50,7 @@ class InMemoryConsentHistoryRepositoryTest {
             null,
             null,
             null,
+            TestConstants.TEST_SERVICE_USER_ID,
             null,
             null,
             null
@@ -66,6 +68,7 @@ class InMemoryConsentHistoryRepositoryTest {
             TestConstants.TEST_CONSENT_EVENT_ID,
             InMemoryConsentChangeEvent.INSERT_EVENT_TYPE,
             TestConstants.TEST_CONSENT_EVENT_TIME,
+            TestConstants.TEST_SERVICE_USER_ID,
             null,
             null,
             null

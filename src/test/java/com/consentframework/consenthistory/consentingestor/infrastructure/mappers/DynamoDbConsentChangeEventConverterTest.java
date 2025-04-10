@@ -68,6 +68,7 @@ class DynamoDbConsentChangeEventConverterTest {
             changeEvent.toConsentHistoryRecord();
         assertNotNull(consentHistoryRecord);
         assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, consentHistoryRecord.id());
+        assertEquals(TestConstants.TEST_SERVICE_USER_ID, consentHistoryRecord.serviceUserId());
         assertEquals(eventId, consentHistoryRecord.eventId());
 
         final SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");

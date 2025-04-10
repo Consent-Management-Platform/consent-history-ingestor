@@ -17,6 +17,9 @@ public record ConsentHistoryRecord<T>(
     String eventType,
     // Time of the consent event
     String eventTime,
+    // ConsentHistoryByServiceUser GSI partition key, with values such as "ServiceId|UserId"
+    // Used to efficiently query for all consent history records for a specific service and user
+    String serviceUserId,
     // Optional time to live for the history record, primarily for testing purposes
     Optional<String> expiryTime,
     // Consent data before the operation, empty for creation events

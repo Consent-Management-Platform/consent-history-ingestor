@@ -16,6 +16,7 @@ public final class TestConstants {
     public static final String TEST_USER_ID = "TestUserId";
     public static final String TEST_CONSENT_VERSION = "1";
     public static final String TEST_CONSENT_PARTITION_KEY = String.format("%s|%s|%s", TEST_SERVICE_ID, TEST_USER_ID, TEST_CONSENT_ID);
+    public static final String TEST_SERVICE_USER_ID = String.format("%s|%s", TEST_SERVICE_ID, TEST_USER_ID);
     public static final String TEST_CONSENT_EVENT_ID = "TestConsentEventId";
     public static final String TEST_CONSENT_EVENT_TIME = "2021-01-01T00:00:00Z";
 

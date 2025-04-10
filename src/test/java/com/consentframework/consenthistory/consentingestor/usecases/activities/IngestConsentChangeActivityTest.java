@@ -40,6 +40,7 @@ class IngestConsentChangeActivityTest {
             TestConstants.TEST_CONSENT_PARTITION_KEY,
             TestConstants.TEST_CONSENT_EVENT_ID,
             TestConstants.TEST_CONSENT_EVENT_TIME,
+            TestConstants.TEST_SERVICE_USER_ID,
             oldConsentData,
             newConsentData
         );
@@ -60,6 +61,7 @@ class IngestConsentChangeActivityTest {
             TestConstants.TEST_CONSENT_PARTITION_KEY,
             TestConstants.TEST_CONSENT_EVENT_ID,
             TestConstants.TEST_CONSENT_EVENT_TIME,
+            TestConstants.TEST_SERVICE_USER_ID,
             null,
             newConsentData
         );

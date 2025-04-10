@@ -46,6 +46,7 @@ class DynamoDbConsentHistoryRepositoryTest {
                 TestConstants.TEST_CONSENT_EVENT_ID,
                 DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
+                TestConstants.TEST_SERVICE_USER_ID,
                 null,
                 null,
                 null
@@ -61,6 +62,7 @@ class DynamoDbConsentHistoryRepositoryTest {
                 TestConstants.TEST_CONSENT_EVENT_ID,
                 DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
+                TestConstants.TEST_SERVICE_USER_ID,
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty()
@@ -79,6 +81,7 @@ class DynamoDbConsentHistoryRepositoryTest {
                 TestConstants.TEST_CONSENT_EVENT_ID,
                 DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
+                TestConstants.TEST_SERVICE_USER_ID,
                 Optional.empty(),
                 Optional.of(TestConstants.TEST_CONSENT_RECORD),
                 Optional.empty()
