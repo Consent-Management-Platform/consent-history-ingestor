@@ -37,6 +37,7 @@ public final class TestConstants {
         .eventId(TEST_CONSENT_EVENT_ID)
         .eventType(DynamoDbStreamEventType.INSERT.getValue())
         .eventTime(TEST_CONSENT_EVENT_TIME)
+        .serviceUserId(TEST_SERVICE_USER_ID)
         .newImage(TEST_CONSENT_RECORD)
         .build();
 }

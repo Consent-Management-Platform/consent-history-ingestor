@@ -37,7 +37,8 @@ public class DynamoDbConsentHistoryRepository implements ConsentHistoryRepositor
             .id(consentHistoryRecord.id())
             .eventId(consentHistoryRecord.eventId())
             .eventType(consentHistoryRecord.eventType())
-            .eventTime(consentHistoryRecord.eventTime());
+            .eventTime(consentHistoryRecord.eventTime())
+            .serviceUserId(consentHistoryRecord.serviceUserId());
 
         if (consentHistoryRecord.oldConsentData().isEmpty() && consentHistoryRecord.newConsentData().isEmpty()) {
             throw new IllegalArgumentException(MISSING_DDB_IMAGES_ERROR_MESSAGE);
