@@ -2,6 +2,7 @@ package com.consentframework.consenthistory.consentingestor.infrastructure.mappe
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -87,6 +88,30 @@ class DynamoDbConsentChangeEventConverterTest {
         assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, newImageMap.get(ConsentTableAttributeName.ID.getValue()).s());
         assertEquals(newConsentVersion, newImageMap.get(ConsentTableAttributeName.CONSENT_VERSION.getValue()).n());
         assertEquals(newTestAttributeValue, parseConsentDataAttribute(newImageMap, testAttributeName));
+    }
+
+    @Test
+    void testToDynamoDbConsentChangeEventWhenInvalidPartitionKey() {
+        final String invalidPartitionKey = "invalidPartitionKey";
+
+        final Map<String, AttributeValue> keys = Map.of(ConsentTableAttributeName.ID.getValue(),
+            new AttributeValue().withS(invalidPartitionKey));
+        final Date eventTime = Date.from(Instant.now());
+        final StreamRecord streamRecord = new StreamRecord()
+            .withKeys(keys)
+            .withApproximateCreationDateTime(eventTime)
+            .withStreamViewType(StreamViewType.KEYS_ONLY);
+
+        final String eventId = "abcd-1234";
+        final DynamodbStreamRecord dynamodbStreamRecord = mock(DynamodbStreamRecord.class);
+        when(dynamodbStreamRecord.getEventID()).thenReturn(eventId);
+        when(dynamodbStreamRecord.getEventName()).thenReturn("MODIFY");
+        when(dynamodbStreamRecord.getDynamodb()).thenReturn(streamRecord);
+
+        final IllegalArgumentException thrownException = assertThrows(IllegalArgumentException.class, () -> {
+            DynamoDbConsentChangeEventConverter.toDynamoDbConsentChangeEvent(dynamodbStreamRecord);
+        });
+        assertEquals("Invalid consent record partition key: " + invalidPartitionKey, thrownException.getMessage());
     }
 
     private String parseConsentDataAttribute(
