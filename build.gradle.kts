@@ -8,11 +8,23 @@ plugins {
 
 repositories {
     mavenCentral()
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/Consent-Management-Platform/consent-api-java-common")
+            credentials {
+                username = project.findProperty("gpr.usr") as String? ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
     gradlePluginPortal()
 }
 
 dependencies {
     implementation(libs.guava)
+
+    // Common Consent Framework API Java libraries
+    implementation("com.consentframework:api-java-common:0.0.7")
 
     // AWS Lambda SDK
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
@@ -23,25 +35,10 @@ dependencies {
     implementation("software.amazon.awssdk:dynamodb:$dynamoDbClientVersion")
     implementation("software.amazon.awssdk:dynamodb-enhanced:$dynamoDbClientVersion")
 
-    // JSON parsing dependencies
-    // Chose Jackson over GSON for better performance and long term support.
-    val jacksonVersion = "2.17.1"
-    implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
-    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
-
     // Logging
     val log4j2Version = "2.24.3"
     implementation("org.apache.logging.log4j:log4j-api:$log4j2Version")
     implementation("org.apache.logging.log4j:log4j-core:$log4j2Version")
-
-    // Immutables
-    val immutablesDependency = "org.immutables:value:2.10.1"
-    compileOnly(immutablesDependency)
-    annotationProcessor(immutablesDependency)
-    testCompileOnly(immutablesDependency)
-    testAnnotationProcessor(immutablesDependency)
 
     // Use JUnit Jupiter for testing.
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -8,8 +8,8 @@ import static org.mockito.Mockito.verify;
 
 import com.consentframework.consenthistory.consentingestor.domain.constants.DynamoDbStreamEventType;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
-import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
+import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;

@@ -8,10 +8,10 @@ import com.consentframework.consenthistory.consentingestor.domain.constants.Http
 import com.consentframework.consenthistory.consentingestor.domain.constants.ResponseParameterName;
 import com.consentframework.consenthistory.consentingestor.domain.repositories.ConsentHistoryRepository;
 import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.DynamoDbConsentChangeEvent;
-import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
 import com.consentframework.consenthistory.consentingestor.infrastructure.mappers.DynamoDbConsentChangeEventConverter;
 import com.consentframework.consenthistory.consentingestor.infrastructure.repositories.DynamoDbConsentHistoryRepository;
 import com.consentframework.consenthistory.consentingestor.usecases.activities.IngestConsentChangeActivity;
+import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;

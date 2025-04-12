@@ -2,7 +2,7 @@ package com.consentframework.consenthistory.consentingestor.testcommon.constants
 
 import com.consentframework.consenthistory.consentingestor.domain.constants.ConsentTableAttributeName;
 import com.consentframework.consenthistory.consentingestor.domain.constants.DynamoDbStreamEventType;
-import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
+import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.Map;

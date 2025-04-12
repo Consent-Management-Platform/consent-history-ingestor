@@ -2,7 +2,7 @@ package com.consentframework.consenthistory.consentingestor.infrastructure.repos
 
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
 import com.consentframework.consenthistory.consentingestor.domain.repositories.ConsentHistoryRepository;
-import com.consentframework.consenthistory.consentingestor.infrastructure.entities.DynamoDbConsentHistory;
+import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
