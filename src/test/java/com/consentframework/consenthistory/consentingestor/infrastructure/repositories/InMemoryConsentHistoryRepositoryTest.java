@@ -3,9 +3,9 @@ package com.consentframework.consenthistory.consentingestor.infrastructure.repos
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryKey;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
 import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.InMemoryConsentChangeEvent;
+import com.consentframework.consenthistory.consentingestor.infrastructure.entities.ConsentHistoryKey;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
 package com.consentframework.consenthistory.consentingestor.infrastructure.repositories;
 
-import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryKey;
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
 import com.consentframework.consenthistory.consentingestor.domain.repositories.ConsentHistoryRepository;
+import com.consentframework.consenthistory.consentingestor.infrastructure.entities.ConsentHistoryKey;
 
 import java.util.HashMap;
 import java.util.Map;
