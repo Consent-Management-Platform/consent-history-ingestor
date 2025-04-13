@@ -24,7 +24,7 @@ dependencies {
     implementation(libs.guava)
 
     // Common Consent Framework API Java libraries
-    implementation("com.consentframework:api-java-common:0.0.11")
+    implementation("com.consentframework:api-java-common:0.0.12")
 
     // AWS Lambda SDK
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
