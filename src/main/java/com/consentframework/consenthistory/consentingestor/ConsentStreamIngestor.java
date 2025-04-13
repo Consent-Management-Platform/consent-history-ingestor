@@ -12,13 +12,13 @@ import com.consentframework.consenthistory.consentingestor.infrastructure.mapper
 import com.consentframework.consenthistory.consentingestor.infrastructure.repositories.DynamoDbConsentHistoryRepository;
 import com.consentframework.consenthistory.consentingestor.usecases.activities.IngestConsentChangeActivity;
 import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
+import com.consentframework.shared.api.infrastructure.entities.StoredConsentImage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.List;
 import java.util.Map;
@@ -31,8 +31,8 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
     private static final Logger logger = LogManager.getLogger(ConsentStreamIngestor.class);
 
     private final DynamoDbTable<DynamoDbConsentHistory> consentHistoryTable;
-    private final ConsentHistoryRepository<Map<String, AttributeValue>> consentHistoryRepository;
-    private final IngestConsentChangeActivity<Map<String, AttributeValue>> ingestConsentChangeActivity;
+    private final ConsentHistoryRepository<StoredConsentImage> consentHistoryRepository;
+    private final IngestConsentChangeActivity<StoredConsentImage> ingestConsentChangeActivity;
 
     /**
      * Constructor to inject dependencies.
@@ -42,8 +42,8 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
      * @param ingestConsentChangeActivity The activity for ingesting consent change events.
      */
     public ConsentStreamIngestor(final DynamoDbTable<DynamoDbConsentHistory> consentHistoryTable,
-                                 final ConsentHistoryRepository<Map<String, AttributeValue>> consentHistoryRepository,
-                                 final IngestConsentChangeActivity<Map<String, AttributeValue>> ingestConsentChangeActivity) {
+                                 final ConsentHistoryRepository<StoredConsentImage> consentHistoryRepository,
+                                 final IngestConsentChangeActivity<StoredConsentImage> ingestConsentChangeActivity) {
         this.consentHistoryTable = consentHistoryTable;
         this.consentHistoryRepository = consentHistoryRepository;
         this.ingestConsentChangeActivity = ingestConsentChangeActivity;
@@ -61,7 +61,7 @@ public class ConsentStreamIngestor implements RequestHandler<DynamodbEvent, Map<
 
         this.consentHistoryTable = enhancedClient.table(DynamoDbConsentHistory.TABLE_NAME, tableSchema);
         this.consentHistoryRepository = new DynamoDbConsentHistoryRepository(this.consentHistoryTable);
-        this.ingestConsentChangeActivity = new IngestConsentChangeActivity<Map<String, AttributeValue>>(consentHistoryRepository);
+        this.ingestConsentChangeActivity = new IngestConsentChangeActivity<StoredConsentImage>(consentHistoryRepository);
     }
 
     /**

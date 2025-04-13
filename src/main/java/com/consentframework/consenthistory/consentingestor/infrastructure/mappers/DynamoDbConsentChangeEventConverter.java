@@ -3,9 +3,8 @@ package com.consentframework.consenthistory.consentingestor.infrastructure.mappe
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
 import com.amazonaws.services.lambda.runtime.events.models.dynamodb.StreamRecord;
 import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.DynamoDbConsentChangeEvent;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import com.consentframework.shared.api.infrastructure.entities.StoredConsentImage;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -19,16 +18,25 @@ public final class DynamoDbConsentChangeEventConverter {
      *
      * @param record The DynamoDB stream record.
      * @return The consent change event.
+     * @throws IllegalArgumentException If the stream record cannot be parsed.
      */
-    public static DynamoDbConsentChangeEvent toDynamoDbConsentChangeEvent(final DynamodbStreamRecord record) {
+    public static DynamoDbConsentChangeEvent toDynamoDbConsentChangeEvent(final DynamodbStreamRecord record)
+            throws IllegalArgumentException {
         final String eventId = record.getEventID();
         final StreamRecord streamRecord = record.getDynamodb();
         final String eventType = record.getEventName();
         final String eventTime = streamRecord.getApproximateCreationDateTime().toInstant().toString();
         final String consentRecordPartitionKey = streamRecord.getKeys().get("id").getS();
         final String serviceUserId = parseServiceUserId(consentRecordPartitionKey);
-        final Map<String, AttributeValue> oldImage = LambdaAttributeValueConverter.toDynamoDbAttributeValueMap(streamRecord.getOldImage());
-        final Map<String, AttributeValue> newImage = LambdaAttributeValueConverter.toDynamoDbAttributeValueMap(streamRecord.getNewImage());
+        final StoredConsentImage oldImage;
+        final StoredConsentImage newImage;
+
+        try {
+            oldImage = LambdaAttributeValueConverter.toStoredConsentImage(streamRecord.getOldImage());
+            newImage = LambdaAttributeValueConverter.toStoredConsentImage(streamRecord.getNewImage());
+        } catch (final NullPointerException e) {
+            throw new IllegalArgumentException("Failed to parse consent images from stream event", e);
+        }
 
         return new DynamoDbConsentChangeEvent(consentRecordPartitionKey, eventId, eventType, eventTime, serviceUserId,
             Optional.ofNullable(oldImage), Optional.ofNullable(newImage));

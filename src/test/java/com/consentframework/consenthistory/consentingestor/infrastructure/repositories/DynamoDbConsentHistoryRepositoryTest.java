@@ -10,15 +10,14 @@ import com.consentframework.consenthistory.consentingestor.domain.constants.Dyna
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
 import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
+import com.consentframework.shared.api.infrastructure.entities.StoredConsentImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.MockitoAnnotations;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
-import java.util.Map;
 import java.util.Optional;
 
 class DynamoDbConsentHistoryRepositoryTest {
@@ -40,8 +39,8 @@ class DynamoDbConsentHistoryRepositoryTest {
 
     @Test
     void testSave_nullImages() {
-        final ConsentHistoryRecord<Map<String, AttributeValue>> consentHistoryRecord =
-            new ConsentHistoryRecord<Map<String, AttributeValue>>(
+        final ConsentHistoryRecord<StoredConsentImage> consentHistoryRecord =
+            new ConsentHistoryRecord<StoredConsentImage>(
                 TestConstants.TEST_CONSENT_ID,
                 TestConstants.TEST_CONSENT_EVENT_ID,
                 DynamoDbStreamEventType.REMOVE.getValue(),
@@ -56,8 +55,8 @@ class DynamoDbConsentHistoryRepositoryTest {
 
     @Test
     void testSave_emptyImages() {
-        final ConsentHistoryRecord<Map<String, AttributeValue>> consentHistoryRecord =
-            new ConsentHistoryRecord<Map<String, AttributeValue>>(
+        final ConsentHistoryRecord<StoredConsentImage> consentHistoryRecord =
+            new ConsentHistoryRecord<StoredConsentImage>(
                 TestConstants.TEST_CONSENT_ID,
                 TestConstants.TEST_CONSENT_EVENT_ID,
                 DynamoDbStreamEventType.REMOVE.getValue(),
@@ -75,15 +74,15 @@ class DynamoDbConsentHistoryRepositoryTest {
 
     @Test
     void testSave() {
-        final ConsentHistoryRecord<Map<String, AttributeValue>> consentHistoryRecord =
-            new ConsentHistoryRecord<Map<String, AttributeValue>>(
+        final ConsentHistoryRecord<StoredConsentImage> consentHistoryRecord =
+            new ConsentHistoryRecord<StoredConsentImage>(
                 TestConstants.TEST_CONSENT_ID,
                 TestConstants.TEST_CONSENT_EVENT_ID,
                 DynamoDbStreamEventType.REMOVE.getValue(),
                 TestConstants.TEST_CONSENT_EVENT_TIME,
                 TestConstants.TEST_SERVICE_USER_ID,
                 Optional.empty(),
-                Optional.of(TestConstants.TEST_CONSENT_RECORD),
+                Optional.of(TestConstants.TEST_STORED_CONSENT),
                 Optional.empty()
             );
         dynamoDbConsentHistoryRepository.save(consentHistoryRecord);

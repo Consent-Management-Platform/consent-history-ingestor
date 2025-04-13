@@ -14,6 +14,7 @@ import com.consentframework.consenthistory.consentingestor.domain.constants.Cons
 import com.consentframework.consenthistory.consentingestor.domain.entities.ConsentHistoryRecord;
 import com.consentframework.consenthistory.consentingestor.infrastructure.adapters.DynamoDbConsentChangeEvent;
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
+import com.consentframework.shared.api.infrastructure.entities.StoredConsentImage;
 import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
@@ -35,14 +36,22 @@ class DynamoDbConsentChangeEventConverterTest {
             new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY));
         final Map<String, AttributeValue> oldImage = Map.of(
             ConsentTableAttributeName.ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY),
+            ConsentTableAttributeName.SERVICE_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_SERVICE_ID),
+            ConsentTableAttributeName.USER_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_USER_ID),
+            ConsentTableAttributeName.CONSENT_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_ID),
             ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN(oldConsentVersion),
+            ConsentTableAttributeName.CONSENT_STATUS.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_STATUS),
             ConsentTableAttributeName.CONSENT_DATA.getValue(), new AttributeValue().withM(Map.of(
                 testAttributeName, new AttributeValue().withS(oldTestAttributeValue)
             ))
         );
         final Map<String, AttributeValue> newImage = Map.of(
             ConsentTableAttributeName.ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY),
+            ConsentTableAttributeName.SERVICE_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_SERVICE_ID),
+            ConsentTableAttributeName.USER_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_USER_ID),
+            ConsentTableAttributeName.CONSENT_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_ID),
             ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN(newConsentVersion),
+            ConsentTableAttributeName.CONSENT_STATUS.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_STATUS),
             ConsentTableAttributeName.CONSENT_DATA.getValue(), new AttributeValue().withM(Map.of(
                 testAttributeName, new AttributeValue().withS(newTestAttributeValue)
             ))
@@ -65,7 +74,7 @@ class DynamoDbConsentChangeEventConverterTest {
             dynamodbStreamRecord);
         assertNotNull(changeEvent);
 
-        final ConsentHistoryRecord<Map<String, software.amazon.awssdk.services.dynamodb.model.AttributeValue>> consentHistoryRecord =
+        final ConsentHistoryRecord<StoredConsentImage> consentHistoryRecord =
             changeEvent.toConsentHistoryRecord();
         assertNotNull(consentHistoryRecord);
         assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, consentHistoryRecord.id());
@@ -77,17 +86,42 @@ class DynamoDbConsentChangeEventConverterTest {
         final String expectedIso8601EventTime = isoFormat.format(eventTime);
         assertEquals(expectedIso8601EventTime, consentHistoryRecord.eventTime());
 
-        final Map<String, software.amazon.awssdk.services.dynamodb.model.AttributeValue> oldImageMap =
-            consentHistoryRecord.oldConsentData().get();
-        assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, oldImageMap.get(ConsentTableAttributeName.ID.getValue()).s());
-        assertEquals(oldConsentVersion, oldImageMap.get(ConsentTableAttributeName.CONSENT_VERSION.getValue()).n());
-        assertEquals(oldTestAttributeValue, parseConsentDataAttribute(oldImageMap, testAttributeName));
+        final StoredConsentImage parsedOldImage = consentHistoryRecord.oldConsentData().get();
+        assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, parsedOldImage.getId());
+        assertEquals(oldConsentVersion, parsedOldImage.getConsentVersion().toString());
+        assertEquals(oldTestAttributeValue, parseConsentDataAttribute(parsedOldImage, testAttributeName));
 
-        final Map<String, software.amazon.awssdk.services.dynamodb.model.AttributeValue> newImageMap =
-            consentHistoryRecord.newConsentData().get();
-        assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, newImageMap.get(ConsentTableAttributeName.ID.getValue()).s());
-        assertEquals(newConsentVersion, newImageMap.get(ConsentTableAttributeName.CONSENT_VERSION.getValue()).n());
-        assertEquals(newTestAttributeValue, parseConsentDataAttribute(newImageMap, testAttributeName));
+        final StoredConsentImage parsedNewImage = consentHistoryRecord.newConsentData().get();
+        assertEquals(TestConstants.TEST_CONSENT_PARTITION_KEY, parsedNewImage.getId());
+        assertEquals(newConsentVersion, parsedNewImage.getConsentVersion().toString());
+        assertEquals(newTestAttributeValue, parseConsentDataAttribute(parsedNewImage, testAttributeName));
+    }
+
+    @Test
+    void testToDynamoDbConsentChangeEventWhenInvalidConsentImages() {
+        final Map<String, AttributeValue> keys = Map.of(ConsentTableAttributeName.ID.getValue(),
+            new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY));
+        final Map<String, AttributeValue> oldImage = null;
+        final Map<String, AttributeValue> newImage = Map.of(
+            ConsentTableAttributeName.ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY)
+        );
+        final Date eventTime = Date.from(Instant.now());
+        final StreamRecord streamRecord = new StreamRecord()
+            .withKeys(keys)
+            .withApproximateCreationDateTime(eventTime)
+            .withOldImage(oldImage)
+            .withNewImage(newImage)
+            .withStreamViewType(StreamViewType.NEW_AND_OLD_IMAGES);
+
+        final String eventId = "abcd-1234";
+        final DynamodbStreamRecord dynamodbStreamRecord = mock(DynamodbStreamRecord.class);
+        when(dynamodbStreamRecord.getEventID()).thenReturn(eventId);
+        when(dynamodbStreamRecord.getEventName()).thenReturn("MODIFY");
+        when(dynamodbStreamRecord.getDynamodb()).thenReturn(streamRecord);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            DynamoDbConsentChangeEventConverter.toDynamoDbConsentChangeEvent(dynamodbStreamRecord);
+        });
     }
 
     @Test
@@ -114,10 +148,7 @@ class DynamoDbConsentChangeEventConverterTest {
         assertEquals("Invalid consent record partition key: " + invalidPartitionKey, thrownException.getMessage());
     }
 
-    private String parseConsentDataAttribute(
-            final Map<String, software.amazon.awssdk.services.dynamodb.model.AttributeValue> consentImage,
-            final String attributeName) {
-        return consentImage.get(ConsentTableAttributeName.CONSENT_DATA.getValue()).m()
-            .get(attributeName).s();
+    private String parseConsentDataAttribute(final StoredConsentImage consentImage, final String attributeName) {
+        return consentImage.getConsentData().get(attributeName);
     }
 }

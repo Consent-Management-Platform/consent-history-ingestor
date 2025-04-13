@@ -20,6 +20,7 @@ import com.consentframework.consenthistory.consentingestor.infrastructure.reposi
 import com.consentframework.consenthistory.consentingestor.testcommon.constants.TestConstants;
 import com.consentframework.consenthistory.consentingestor.usecases.activities.IngestConsentChangeActivity;
 import com.consentframework.shared.api.infrastructure.entities.DynamoDbConsentHistory;
+import com.consentframework.shared.api.infrastructure.entities.StoredConsentImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,8 +35,7 @@ import java.util.Map;
 class ConsentStreamIngestorTest {
     private DynamoDbTable<DynamoDbConsentHistory> consentHistoryTable;
     private DynamoDbConsentHistoryRepository dynamoDbConsentHistoryRepository;
-    private IngestConsentChangeActivity<Map<String, software.amazon.awssdk.services.dynamodb.model.AttributeValue>>
-        ingestConsentChangeActivity;
+    private IngestConsentChangeActivity<StoredConsentImage> ingestConsentChangeActivity;
     private ConsentStreamIngestor ingestor;
     private Context context;
 
@@ -44,8 +44,7 @@ class ConsentStreamIngestorTest {
     void setUp() {
         consentHistoryTable = (DynamoDbTable<DynamoDbConsentHistory>) mock(DynamoDbTable.class);;
         dynamoDbConsentHistoryRepository = new DynamoDbConsentHistoryRepository(consentHistoryTable);
-        ingestConsentChangeActivity = new IngestConsentChangeActivity<Map<String,
-            software.amazon.awssdk.services.dynamodb.model.AttributeValue>>(dynamoDbConsentHistoryRepository);
+        ingestConsentChangeActivity = new IngestConsentChangeActivity<StoredConsentImage>(dynamoDbConsentHistoryRepository);
         ingestor = new ConsentStreamIngestor(consentHistoryTable, dynamoDbConsentHistoryRepository, ingestConsentChangeActivity);
         context = Mockito.mock(Context.class);
         MockitoAnnotations.openMocks(this);
@@ -74,19 +73,30 @@ class ConsentStreamIngestorTest {
     }
 
     private DynamodbStreamRecord createDynamoDbStreamModifyRecord(final String oldTestAttributeValue, final String newTestAttributeValue) {
+        final String oldConsentVersion = "1";
+        final String newConsentVersion = "2";
+        final String testAttributeName = "testAttribute";
+
         final Map<String, AttributeValue> keys = Map.of(ConsentTableAttributeName.ID.getValue(),
             new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY));
-        final String testAttributeName = "testAttribute";
         final Map<String, AttributeValue> oldImage = Map.of(
             ConsentTableAttributeName.ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY),
-            ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN("1"),
+            ConsentTableAttributeName.SERVICE_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_SERVICE_ID),
+            ConsentTableAttributeName.USER_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_USER_ID),
+            ConsentTableAttributeName.CONSENT_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_ID),
+            ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN(oldConsentVersion),
+            ConsentTableAttributeName.CONSENT_STATUS.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_STATUS),
             ConsentTableAttributeName.CONSENT_DATA.getValue(), new AttributeValue().withM(Map.of(
                 testAttributeName, new AttributeValue().withS(oldTestAttributeValue)
             ))
         );
         final Map<String, AttributeValue> newImage = Map.of(
             ConsentTableAttributeName.ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY),
-            ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN("2"),
+            ConsentTableAttributeName.SERVICE_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_SERVICE_ID),
+            ConsentTableAttributeName.USER_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_USER_ID),
+            ConsentTableAttributeName.CONSENT_ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_ID),
+            ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN(newConsentVersion),
+            ConsentTableAttributeName.CONSENT_STATUS.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_STATUS),
             ConsentTableAttributeName.CONSENT_DATA.getValue(), new AttributeValue().withM(Map.of(
                 testAttributeName, new AttributeValue().withS(newTestAttributeValue)
             ))
@@ -109,14 +119,10 @@ class ConsentStreamIngestorTest {
     private DynamodbStreamRecord createDynamoDbStreamCreateRecord() {
         final Map<String, AttributeValue> keys = Map.of(ConsentTableAttributeName.ID.getValue(),
             new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY));
-        final Map<String, AttributeValue> newImage = Map.of(
-            ConsentTableAttributeName.ID.getValue(), new AttributeValue().withS(TestConstants.TEST_CONSENT_PARTITION_KEY),
-            ConsentTableAttributeName.CONSENT_VERSION.getValue(), new AttributeValue().withN("1")
-        );
         final StreamRecord streamRecord = new StreamRecord()
             .withKeys(keys)
             .withApproximateCreationDateTime(Date.from(Instant.now()))
-            .withNewImage(newImage)
+            .withNewImage(TestConstants.TEST_LAMBDA_EVENT_CONSENT_WITH_ALL_ATTRIBUTES)
             .withStreamViewType(StreamViewType.NEW_AND_OLD_IMAGES);
 
         final DynamodbStreamRecord dynamodbStreamRecord = mock(DynamodbStreamRecord.class);

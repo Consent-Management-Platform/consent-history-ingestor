@@ -24,11 +24,13 @@ dependencies {
     implementation(libs.guava)
 
     // Common Consent Framework API Java libraries
-    implementation("com.consentframework:api-java-common:0.0.7")
+    implementation("com.consentframework:api-java-common:0.0.10")
 
     // AWS Lambda SDK
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
     implementation("com.amazonaws:aws-lambda-java-events:3.14.0")
+
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.17.1")
 
     // AWS DynamoDB SDK
     val dynamoDbClientVersion = "2.26.7"

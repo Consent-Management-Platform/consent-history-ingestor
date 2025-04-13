@@ -8,9 +8,11 @@ public enum ConsentTableAttributeName {
     SERVICE_ID("serviceId"),
     USER_ID("userId"),
     CONSENT_ID("consentId"),
-    CONSENT_DATA("consentData"),
     CONSENT_VERSION("consentVersion"),
-    CONSENT_STATUS("consentStatus");
+    CONSENT_STATUS("consentStatus"),
+    CONSENT_TYPE("consentType"),
+    CONSENT_DATA("consentData"),
+    EXPIRY_TIME("expiryTime");
 
     private final String value;
 
